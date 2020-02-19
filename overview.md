@@ -121,38 +121,713 @@ Signal Reception: приймання даних, створених пристр
 
 Зараз ми підійшли до фактичного кінця життя нашого єдиного значення даних. Чистка даних - це видалення кожної копії елемента даних з підприємства.
 В ідеалі це буде зроблено з архіву. Проблема управління даними на цій фазі життєвого циклу даних свідчить про те, що очищення фактично виконано належним чином.
+## The DDF data model
 
-# Data Format Description Language
-Мова формату опису мови (DFDL, часто вимовляється daff-o-dil), опублікована як Рекомендована програма відкритого форуму в січні 2011 року, є модою моделювання для опису загального тексту та двійкових даних у стандартному вигляді. Модель або схема DFDL дозволяє зчитувати (або розбирати) будь-який текст чи двійкові дані з його рідного формату і представлятись як екземпляр інформаційного набору. (Набір інформації - це логічне подання вмісту даних, незалежно від фізичного формату. Наприклад, два записи можуть бути в різних форматах, оскільки один має поля фіксованої довжини, а інший використовує роздільники, але вони можуть містити абсолютно однакові дані, і обидва вони будуть представлені одним і тим же набором інформації). Ця ж схема DFDL також дозволяє брати дані з екземпляра інформаційного набору та виписувати (або "серіалізувати") у свій початковий формат.
+This document will explain the DDF conceptual model. Read more the context of DDF in [this document](https://docs.google.com/document/d/1wQ9hp3OoLKE3oor2TtSxXx4QMkEqEtoEYDfzQASfA6E/edit#).
 
-DFDL є описовим і не є розпорядчим. DFDL не є форматом даних, а також не нав'язує використання будь-якого конкретного формату даних. Натомість він пропонує стандартний спосіб опису багатьох різних типів формату даних. Цей підхід має ряд переваг. Це дозволяє автору програми спроектувати відповідне представлення даних відповідно до їх вимог, описуючи його стандартним способом, яким можна ділитися загалом, дозволяючи безлічі програм безпосередньо обмінюватися даними.
+**Examples in this document**
 
-DFDL досягає цього, спираючись на засоби W3C XML Schema 1.0. Використовується підмножина XML-схеми, достатня для моделювання не-XML-даних. Мотивація такого підходу полягає у тому, щоб уникнути винайдення абсолютно нової мови схеми та спростити перетворення загального тексту та двійкових даних за допомогою набору інформації DFDL у відповідний XML-документ.
+Although DDF is a conceptual model, without a specific data format, we will use examples in a tabular format. These tables resemble the _DDFcsv_ format. We do so because examples can help greatly with understanding, and we need a format to present these examples in.
 
-Навчальний матеріал доступний у вигляді навчального посібника DFDL, відеороликів та декількох практичних лабораторій DFDL.
+Overview
+
+DDF is used to define datasets. A dataset is a body of coherent, related data that is composed of separate elements but can be manipulated as one unit by a computer. Each DDF dataset defines five collections of data: Concepts, Metadata, Entities, Datapoints and Synonyms.
+
+1. Datapoints contain multidimensional data.
+_The population of males in germany in 2015 was 293958._
+2. Entities contain single-dimensional data.
+_The official long name of germany is Federal Republic of Germany._
+3. Metadata contains additional information about data.
+_The source for__all population data for germany in 2015 (both male and female) is the central bureau of statistics in germany and the precision is 95%.
+The source for the data that Hong Kong is a Chinese province is the Chinese government._
+4. Concepts contain information about the variables in the data set (i.e. the column-headers in a tabular format).
+_Population is measured in people and has to be bigger than 0._
+5. Synonyms contain synonyms used to identify entities and concepts in other datasets. They are used to harmonize datasets from different sources to one coherent dataset.
+_The country Germany has synonyms &quot;ger&quot;, &quot;deu&quot;, &quot;de&quot;, &quot;Bundesrepublik Deutschland&quot; and &quot;Federal Republic of Germany&quot;._
+
+A dataset must have Concepts and may have DataPoints, Entities, Metadata or Synonyms.
+
+**Unique key-value pairs**
+
+Each one of these collections consists of key-value pairs. Every key-value pair is unique in the whole data set.
+
+A concrete example: In one dataset, there can only exist one value for: The population of germany in 2015, the official long name of Germany, the unit of measurement for population or the source for all population data for germany in 2015.
+
+DDF model in graphics
+
+The image below is a graphical overview of the DDF model. The first part shows all the concept types in DDF. The lower part shows the types of data stored in DDF.
+
+ ![](https://lh4.googleusercontent.com/ZsHWcbe733jyoLSOj5DjEvTdTbMpXjeAuJxBzenWVAb--CrymndiJeWyPHoMo2_b-lv_Dl_ZYlLmvQ3rpDWUl7WMX5sTCdLrraHKf7zBMu-HM3oIxmSZ9eVJJ2K-QidpBRfmNE1S=s650)
+
+## A stepwise introduction to DDF.
+
+This document will explain the functionalities of DDF, step by step, with increasing complexity. First, simple data storage in _DataPoints_. Second, defining single-dimensional data in _Entities_. Third, giving information about your column headers in _Concepts_. Fourth, giving information about your data in _Metadata_.
+
+Tip: Keep the overview above next to you as a quick reference while reading this introduction. Either print it out or open it in a separate window/screen. Furthermore, look at the [systema globalis](https://github.com/open-numbers/ddf--gapminder--systema_globalis/tree/newdefinition) dataset to see if you can understand its structure with this guide.
+
+DDF step 1: Data is stored in DataPoints
+
+Data in DDF is stored in key-value pairs called DataPoints. The key consists of _two or more_ dimensions while the value consists of _one_ indicators.
+
+The below table shows
+
+1. DataPoints with key: country and year, value: government\_type
+2. DataPoints with key: country and year, value: population
+
+|   | _key: Dimensions_ | _values: Indicators_ |
+| --- | --- | --- |
+| Concepts | **country** | **year** | **government\_type** | **population** |
+| DataPoints | Germany | 1940 | dictatorship | 3954858 |
+| Germany | 2015 | parliamentary democracy | 50495854 |
+| Sweden | 2015 | parliamentary democracy | 9504847 |
+| ... | ... | ... |   |
+
+1.1 Concepts, dimensions and indicators
+
+A quick introduction to concepts is necessary, further detailed explanation follows in step 3.
+
+- A **concept** is anything that can be a _column header_ in a table.
+In the table above, country, year and government\_type are all concepts.
+- A **concept type** signifies the datatype of the values under a certain concept.
+Types defined in DDF are _string, measure_ (numeric)_, boolean, interval, time_ and the more DDF-specific _entity domain, entity set and role_. The former speak for themselves while the latter will be explained in step 2, entities.
+In the table above, country and government\_type are concepts with a _entity\_domain_ concept type, year has a _time_ concept type and population has a _measure_ concept type.
+
+In DDF DataPoints:
+
+- A **dimension** is a concept in the key of the DataPoint key-value pair. In statistics, a concept in the key is called an independent variable.
+In the table above, country and year are dimensions forming the key to the indicator.
+- An **indicator** is a concept in the value-part of the DataPoint key-value pair. In statistics the indicator would be called a dependent variable, because its value is dependent on the key.
+In the table above government\_type and population are the indicators.
+
+One concept is not _either_ a dimension _or_ an indicator. Within the same dataset, a concept is _just_ a column header in a tabular format, with one defined meaning. This definition is discussed in step 3.
+
+The tables below show the concept &#39;leader&#39; as both an indicator and a dimension.
+
+|   | _key: Dimensions_ | _value: Indicator_ |
+| --- | --- | --- |
+| Concepts | **country** | **year** | **leader** |
+| DataPoints | Germany | 2015 | Angela Merkel |
+
+|   | _key: Dimensions_ | _value: Indicator_ |
+| --- | --- | --- |
+| Concepts | **leader** | **year** | **approval\_rating** |
+| DataPoints | Angela Merkel | 2015 | 0.48 |
+
+1.2 Dimensions as a key for a DataPoint
+
+Dimensions are the concepts making up the key in DataPoints. DataPoints in DDF are often used to store changes over years and geographic locations. Therefore, these show up as the key dimensions in many examples in this document, such as in the table on the previous page.
+
+However, one can imagine any number of dimensions to be added to further refine the key:
+
+| _key: Dimensions_ | _value: Indicators_ |
+| --- | --- |
+| **country** | **year** | **gender** | **age\_group** | **population** |
+| Sweden | 2015 | male | 0-4 | 485 055 |
+| Sweden | 2015 | female | 0-4 | 483 538 |
+| Sweden | 2015 | male | 5-9 | 495 494 |
+| ... | ... | ... | ... | ... |
+
+Moreover, DDF is not restricted to time and geographic places. Any kind of indicator for any set of dimensions can be stored using DDF:
+
+| _key: Dimensions_ | _value: Indicators_ |
+| --- | --- |
+| **programming\_language** | **company** | **number\_of\_projects** |
+| C# | microsoft | 405 |
+| C# | apple | 949 |
+| Javascript | microsoft | 6594 |
+| ... | ... | ... |
+
+Dimensions are limited to being of the concept\_type entity domain, entity set or time. The exact meaning of these concept types will be further discussed in the rest of the document.
+
+Dimensions can be of any type. They can be strings, like in the table above. However, they can also be measures like in the table below. In this table, the measures latitude and longitude are used as dimensions for the indicator temperature.
+
+| _key: Dimensions_ | _value: Indicators_ |
+| --- | --- |
+| **latitude** | **longitude** | **temperature** |
+| 90 | 9 | 30 |
+| 91 | 10 | 31 |
+| ... | ... | ... |
+
+1.3 Indicators
+
+The set of indicators can be expanded to represent more data for a certain set of dimensions. In the table below, data for population and life expectancy is given for the dimensions country and year.
+
+| _key: Dimensions_ | _value: Indicators_ |
+| --- | --- |
+| **country** | **year** | **population** | **life expectancy** |
+| Sweden | 2015 | 9 838 480 | 81.48 |
+| Sweden | 2014 | 9 644 864 | 81.38 |
+| Norway | 2015 | 5 165 000 | 80.69 |
+| ... | ... | ... |   |
+
+An indicator does not have to be continuous or even numeric in nature. The table below shows the concept government\_type as an indicator, which is discrete and categorical.
+
+| _key: Dimensions_ | _value: Indicators_ |
+| --- | --- |
+| **country** | **year** | **government\_type** |
+| Germany | 1940 | dictatorship |
+| Germany | 1990 | parliamentary democracy |
+| ... | ... | ... |
+
+_Disclaimer: this is a simplified version of Germany&#39;s transformation during the last century_
+
+DDF step 2: Entities
+
+The following terms are introduced in this step:
+
+- A **property** provides additional information about a discrete concept.
+For example, the concept country can have properties full\_name, latitude or longitude.
+- An **entity domain** is a discrete concept which has all of its possible values enumerated. This way, it explicitly defines the domain of the concept. Moreover, enumerating all possible values makes it possible to define properties for each value.
+For example, we can turn country into an entity domain by enumerating all countries. By doing so, we can define the full name, latitude and longitude for each country.
+- An **entity** is one value within an entity domain.
+For example Sweden or Russia are entities in the entity domain country.
+- An **entity set** is a set of entities within an entity domain.
+For example, instead of an entity domain, country can be an entity set within an entity domain geographic places, next to other entity sets such as city, world\_region and province.
+
+2.1 Entity domains, properties and entities
+
+In the table below, country is the entity domain. Full\_name, latitude and longitude are the properties. Sweden, Norway and Russia are the entities.
+
+|   | _key: Entity domain_ | _values: Properties_ |
+| --- | --- | --- |
+| _concept_ | **country** | **full\_name** | **latitude** | **longitude** |
+| _entities_ | sweden | Kingdom of Sweden | 59.3500 | 18.0667 |
+| norway | Kingdom of Norway | 61.0000 | 8.0000 |
+| russia | Russian Federation | 60.0000 | 90.0000 |
+
+2.1.1 Entity identifiers
+
+Each entity is represented by an unique identifier in the entity domain column. This identifier is unique, but only within the entity domain. **Entity identifiers can only contain lowercase alphanumeric characters and underscores.**
+
+The identifier does not have to be the name of the entity but should nonetheless be meaningful. In other words, it is not recommended to use self-generated numeric identifier.
+
+For example, the table below uses lowercase iso 3-character country codes as the identifier and stores the short name as a string-property &#39;name&#39;.
+
+|   | _key: Entity domain_ | _value: Properties_ |
+| --- | --- | --- |
+| _concept_ | **country** | **name** | **full\_name** | **latitude** | **longitude** |
+| _entities_ | swe | Sweden | Kingdom of Sweden | 59.3500 | 18.0667 |
+| nor | Norway | Kingdom of Norway | 61.0000 | 8.0000 |
+| rus | Russia | Russian Federation | 60.0000 | 90.0000 |
+
+2.2 Entity sets
+
+An entity set is a set of entities within an entity domain. An entity domain is itself an entity set containing all the entities in that domain. For example, the entity domain &#39;geographic places&#39; or &#39;geo&#39; is itself an entity set of all geographic places. Furthermore, it can have the sets world regions, countries, cities and neighbourhoods. Each of these sets would have the corresponding entities as their members. All the countries in the countries set, all cities in the cities set, et cetera. All these sets share the same domain: &#39;geo&#39;; the entities in them are all geographic places.
+
+An entity&#39;s membership of an entity set is indicated by an is--\&lt;entity\_set\&gt; property, with a boolean value.
+
+| _key: Entity domain_ | _value: Properties_ |
+| --- | --- |
+| **geo** | **name** | **is--country** | **is--region** |
+| afr | Africa | false | true |
+| eur | Europe | false | true |
+| swe | Sweden | true | false |
+| ... | ... | ... | ... |
+
+The entity domain and entity sets (with their domain) are defined in the concepts table1.
+
+| _key: concept_ | _value: concept properties_ |
+| --- | --- |
+| **concept** | **concept\_type** | **domain** |
+| geo | entity\_domain |   |
+| country | entity\_set | geo |
+| region | entity\_set | geo |
+| city | entity\_set | geo |
+| ... | ... | ... |
+
+2.2.1 Membership of multiple sets
+
+An entity can belong to zero or more sets within its entity domain. Membership of multiple sets is indicated simply by having multiple is--\&lt;entity\_set\&gt; properties set to true. An entity can only be member of sets within its entity domain.
+
+| _key: Entity domain_ | _values: Properties_ |
+| --- | --- |
+| **geo** | **name** | **is--country** | **is--city** |
+| hkg | Hongkong | true | true |
+| swe | Sweden | true | false |
+| sto | Stockholm | false | true |
+| ... | ... | ... | ... |
+
+2.2.2 Entity domains and entity sets
+
+Both entity domains and entity sets group entities. But there are some important differences. The examples in the list below refer to the following venn-diagram:
+
+ ![](https://i.ibb.co/yVsjMcR/Screenshot-from-2020-02-19-13-14-00.png)
+
+- An entity set álways has an entity domain to which it belongs.
+_Example: the entity sets city and country exist within the domain geo. They cannot exist outside the domain geo. Unless we would make them entity domains themselves._
+
+- An entity set can not overspan domains. They are always confined to one domain.
+_Example: the entity sets city, country, binary gender and non-binary gender stay within their entity domains._
+
+- Entity sets can overlap within their domain. In other words: entities can be member of multiple sets within their domain.
+_Example: hong kong is both a city and a country. female is both a binary gender and non-binary gender_
+
+- An entity-id is unique within one domain.
+_Example:__both entity domains geo and gender have only one entity with id &#39;male&#39;, they cannot have more than one entity with id &#39;male&#39; each. There is only one entity hong\_kong within geo and it&#39;s member of the sets city and country._
+
+- An entity-id is not unique across domains.
+_Example: The two &#39;male&#39; entities in the geo and gender domains are not the same entity. In gender it refers to the male gender, in geo it refers to the city Malé in the Maldives._
 
 
-Мета DFDL - забезпечити багату мову моделювання, здатну представляти будь-який текстовий або двійковий формат даних. Випуск 1.0 є головним кроком до досягнення цієї мети. Ця можливість включає підтримку:
+2.2.3 Properties of entities in different entity sets
 
-* Текстові типи даних, такі як рядки, числа, зональні десяткові знаки, календарі та булеві символи
-* Бінарні типи даних, такі як цілі числа доповнення двох, BCD, упаковані десяткові числа, поплавці, календарі та булеві
-* Дані фіксованої довжини та дані, обмежені текстовою чи двійковою розміткою
-* Структури мовних даних, знайдені в таких мовах, як COBOL, C та PL / 1
-* Галузеві стандарти, такі як CSV, SWIFT, FIX, HL7, X12, HIPAA, EDIFACT, ISO8583
-* Будь-яке кодування та ендіанство
-* Двонаправлений текст
-* Бітові дані довільної довжини
-* Мови візерунків для текстових чисел та календарів
-* Впорядкований, не упорядкований та плаваючий вміст
-* Значення за замовчуванням для розбору та серіалізації
-* Можливість нульових значень для обробки позадіапазонних даних
-* Фіксовані та змінні масиви
-* Мова виразів XPath 2.0, включаючи змінні для моделювання динамічних даних
-* Спекулятивний аналіз та інші механізми для вирішення варіантів вибору та необов’язковості
-* Перевірка правил XML Schema 1.0
-* Механізм масштабування, який дозволяє застосовувати загальні значення властивостей у кількох точках анотації
-* Приховування елементів у даних із набору інформації
-* Обчислення значень елементів для набору інформації
+Entities in different sets can have different properties. A country might have an anthem while a city doesn&#39;t. In the table below countries and regions, both being entity sets in the domain geo, have different properties.
+
+The absence of an is--\&lt;entity\_set\&gt; property for a certain entity infers that its value is false, i.e. it is not a member of that set. In the table below the absence of is--region and is--city infers none of the countries is a region or a city.
+
+| _key: Entity domain_ | _value: Properties_ |
+| --- | --- |
+| **geo** | **name** | **anthem** | **is--country** |
+| swe | Sweden | Du gamla, Du fria | true |
+| nor | Norway | Ja, vi elsker dette landet | true |
+| rus | Russia | Боже, Царя храни! | true |
+| ... | ... |   | ... |
+
+Similarly, in the table below, the absence of is--country and is--city infers none of the regions is a country or city.
+
+| _key: Entity domain_ | _value: Properties_ |
+| --- | --- |
+| **geo** | **name** | **is--region** |
+| afr | Africa | true |
+| eur | Europe | true |
+| ... | ... | ... |
+
+2.2.4 Entity set hierarchy
+
+A hierarchy in the entity sets can be defined through a drill\_up property on an entity set.
+
+| _key: concept_ | _value: concept properties_ |
+| --- | --- |
+| **concept** | **concept\_type** | **domain** | **drill\_up** |
+| geo | entity\_domain |   |   |
+| region | entity\_set | geo |   |
+| country | entity\_set | geo | region |
+| city | entity\_set | geo | country |
+| ... | ... | ... |   |
+
+Each set which can drill up to another set, has a concept-property drill\_up with the identifier of that set. In the example above, a country drills up to a region, so the entity set country has region as drill\_up.
+
+Every entity in the set then defines which entity in the drill-up set it drills up to. In the example below, the country Sweden drills up to the region Europe while the country Namibia drills up to the region Africa.
+
+| _key: Entity domain_ | _value: Properties_ |
+| --- | --- |
+| **geo** | **name** | **is--region** |
+| eur | Europe | true |
+| afr | Africa | true |
+| ... | ... | ... |
+
+| _key: Entity domain_ | _value: Properties_ |
+| --- | --- |
+| **geo** | **name** | **is--country** | **region** |
+| swe | Sweden | true | eur |
+| nam | Namibia | true | afr |
+| ... | ... | ... |   |
+
+2.2.4.1 Multiple drill ups
+
+An entity set can drill up to one or more other entity sets, including itself. The order in which the drill up-sets are placed, defines priority of drill up. This is important when traversing the data set. For example, when a user is looking at population statistics of cities and wants to drill up, the visualization software can look for population statistics in the order of the drill ups. If the value for drill up is &#39;country, region&#39;, it will first look for population statistics per country. If these are not available it will search for population statistics per region.
+
+| _key: concept_ | _value: concept properties_ |
+| --- | --- |
+| **concept** | **concept\_type** | **domain** | **drill\_up** |
+| geo | entity\_domain |   |   |
+| region | entity\_set | geo |   |
+| country | entity\_set | geo | region |
+| city | entity\_set | geo | [country, region] |
+| ... | ... | ... |   |
+
+| _key: entity domain_ | _value: entity properties_ |
+| --- | --- |
+| **geo** | **name** | **is--region** |
+| eur | Europe | true |
+| afr | Africa | true |
+
+| _key: entity domain_ | _value: entity properties_ |
+| --- | --- |
+| **geo** | **name** | **is--country** | **region** |
+| swe | Sweden | true | eur |
+| nam | Namibia | true | afr |
+
+| _key: entity domain_ | _value: entity properties_ |
+| --- | --- |
+| **geo** | **name** | **is--city** | **region** | **country** |
+| sto | Stockholm | true | eur | swe |
+| win | Windhoek | true | afr | nam |
+
+DDF step 3: Concepts and concept properties
+
+Concepts are the table headers anywhere in a DDF dataset. Concept properties are concepts which give information about concepts. A first peek into concept-properties was the entity domain and entity set enumeration and the properties concept\_type, domain and drill\_up.
+
+Any property of any concept can be defined in a similar way in DDF. All concepts used in the data-set should be enumerated and any property of these concepts can be defined in this enumeration. Below an example for a dataset similar to the ones used in previous examples. Also have a look in the [Systema Globalis](https://github.com/open-numbers/ddf--gapminder--systema_globalis/blob/master/ddf--concepts.csv) data set for an even larger enumeration of concepts.
+
+Concept identifiers, the strings under the &#39;concept&#39; column header, follow the same rules as entity identifiers: **Concept identifiers can only contain lowercase alphanumeric characters and underscores.**
+
+| _key: concept_ | _value: concept properties_ |
+| --- | --- |
+| **concept** | **concept\_type** | **domain** | **drill\_up** | **unit** | **link** |
+| geo | entity\_domain |   |   |   | http://... |
+| region | entity\_set | geo |   |   | http://... |
+| country | entity\_set | geo | region |   | http://... |
+| city | entity\_set | geo | country |   | http://... |
+| unit | entity\_domain |   |   |   | http://... |
+| link | string |   |   |   |   |
+| name | string |   |   |   | http://... |
+| government\_type | string |   |   |   | http://... |
+| population | measure | x ≥ 0 |   | people | http://... |
+| area | measure | x ≥ 0 |   | square\_meter | http://... |
+| map | geojson |   |   |   | http://... |
+| income\_bracket | entity\_domain |   |   |   | http://... |
+| latitude | measure | -90\&lt;=x\&gt;=90 |   | degrees | http://... |
+| domain | string |   |   |   |   |
+| capital | role | city |   |   | http://... |
+
+Note in the above table:
+
+- Almost every single column header in the dataset is enumerated as a concept. The concept-properties themselves are álso concepts (unit, link).
+- The concept-properties concept, concept\_type, drill\_up and the is--\&lt;entity\_set\&gt; entity-properties are not enumerated. They are reserved concepts, a core part of DDF, and thus are not enumerated separately.
+- Unit itself is also an entity domain enumerating all units in the dataset.
+
+3.1 Concept types
+
+DDF has a number of predefined concept types. A concept is given a type by setting the concept\_type property of the concept.
+
+DDF also allows you to define your own concept types.
+
+The predefined concept types are:
+
+3.1.1 **string**
+
+A string of characters.
+
+3.1.2 measure
+
+A numeric value.
+
+3.1.3 interval
+
+An interval between two numeric values.
+
+An interval is always an interval on a certain scale. The scale can be defined by adding a measure concept as the domain of the interval.
+
+The value of an interval are two numbers in JSON array format.
+
+| **concept** | **concept\_type** | **domain** |
+| --- | --- | --- |
+| income | measure | x \&gt; 0 |
+| income\_interval | interval | income |
+| income\_bracket | entity\_domain |   |
+
+| **income\_bracket** | **name** | **income\_interval** |
+| --- | --- | --- |
+| low | Low income | [0, 100] |
+| medium | Medium income | [100, 10000] |
+| high | High income | [10000, Infinity] |
+
+3.1.4 entity\_domain
+
+A concept which has all its possible values enumerated. See step 2.
+
+3.1.5 entity\_set
+
+A concept which has all its possible values enumerated, limited to an entity domain. See step 2.
+
+3.1.6 role
+
+A role is an entity set which contains exactly the same entities as another entity set. Therefore, a role has another entity set as its domain. For more information about roles, read chapter 3.2 on the next page.
+
+3.1.8 composite
+
+A composite concept is a concept which is a composition of two or more other concepts that belong together. For more information on composite concepts, please read chapter 3.3.
+
+3.1.9 Time
+
+The concept\_type time is a special case of an entity domain. The concepts year, month, day, week and quarter are special cases of entity sets in the entity domain time.
+
+They are special cases because the entities are not explicitly enumerated. They are inferred by defined time formats. These formats mostly follow the ISO 8601 basic format. However, we use lower case and added the quarter interval.
+
+| **built-in time concept** | **format** | **example** |
+| --- | --- | --- |
+| year | YYYY | 2015 |
+| month | YYYY-MM | 2015-05 |
+| day | YYYYMMDD | 20150530 |
+| week | YYYYwWW | 2015w03 |
+| quarter | YYYYqQ | 2015q3 |
+| time | any of the above | any of the above |
+
+The time interval formats make them uniquely identifiable. The value can be parsed to find out if what interval it represents, i.e. there are no ambiguous time values.
+
+If you want to use the concepts time, year, month, day, week and quarter in your dataset, all you need to do is define them in your concepts file with concept\_type of time. For example, if you want to use time and year:
+
+| **concept** | **concept\_type** | **name** |
+| --- | --- | --- |
+| time | time | Any time |
+| year | time | Year |
+
+Use the concept year, month, day, week or quarter to limit the possible values to that format. Use the concept time to allow any of the formats.
+
+The built in time concepts can be used under a different concept id by defining a role for them like below. Read more about roles in section 3.2.
+
+| **concept** | **concept\_type** | **domain** |
+| --- | --- | --- |
+| day\_of\_delivery | role | day |
+| founding\_year | role | year |
+
+3.1.10 Custom concept types
+
+You can assign your own concept\_type to a concept as long as it is not one of the above reserved concept types. Concepts with a custom concept type have no restrictions on possible values. Examples are geo\_shapes, URL&#39;s or image BLOBs.
+
+3.2 Roles
+
+A role is a concept which has an entity set as its domain. This allows the use of the same entity set multiple times in a table, yet in a different _role_. An entity set can have zero or more roles.
+For example, capital is a role of city. Political\_capital is another role of city. Any value of capital or political\_capital has to be a reference to a city entity.
+
+The tables below show an example. The first table defines countries, with their capitals and political capitals. The second table defines the cities. The third table, the concept-table, defines that capital and political\_capital are roles of city.
+
+| **geo** | **name** | **capital** | **political\_capital** |
+| --- | --- | --- | --- |
+| nld | Netherlands | ams | hague |
+| swe | Sweden | sthlm | sthlm |
+
+| **geo** | **name** |
+| --- | --- |
+| ams | Amsterdam |
+| hague | The Hague |
+| sthlm | Stockholm |
+
+| **concept** | **concept\_type** | **domain** |
+| --- | --- | --- |
+| geo | entity\_domain |   |
+| city | entity\_set | geo |
+| country | entity\_set | geo |
+| capital | role | city |
+| political\_capital | role | city |
+| name | text |   |
+
+3.2.1 Roles as drill up
+
+Roles can also be used as a drill up. When a role is used as a drill up, it drills up to the entity set which the role is a role of.
+
+| **concept** | **concept\_type** | **domain** | **drill\_up** |
+| --- | --- | --- | --- |
+| geo | entity\_domain |   |   |
+| country | entity\_set | geo |   |
+| nation | role | country |   |
+| city | entity\_set | geo | nation |
+| capital | role | city |   |
+
+| **geo** | **name** | **nation** |
+| --- | --- | --- |
+| ams | Amsterdam | nld |
+| hague | The Hague | nld |
+| sthlm | Stockholm | swe |
+
+| **geo** | **name** |
+| --- | --- |
+| nld | Netherlands |
+| swe | Sweden |
+
+3.3 Composite concepts
+
+A composite concept is a combination of 2 or more other concepts. For example, the birth of a person might consist of a city and a year, always occurring together.
+
+| **concept** | **concept\_type** | **domain** |
+| --- | --- | --- |
+| person | entity\_domain |   |
+| city | entity\_domain |   |
+| year | time |   |
+| birth | composite | [city, year] |
+
+| **person** | **name** | **birth.city** | **birth.year** |
+| --- | --- | --- | --- |
+| jodo | John Doe | sto | 1985 |
+| jado | Jane Doe | bos | 1957 |
+
+| **city** | **name** |
+| --- | --- |
+| sto | Stockholm |
+| bos | Boston |
+
+3.3.1 Composite concepts and roles
+
+Another example is migration flow. This always happen from one place to another. In this case, we need roles to prevent duplication of table headers. The roles also add meaning to the use of &#39;city&#39;.
+
+| **concept** | **concept\_type** | **domain** |
+| --- | --- | --- |
+| migration | measure | x \&gt; 0 |
+| city | entity\_domain |   |
+| from\_city | role | city |
+| to\_city | role | city |
+| flow | composite | [from\_city, to\_city] |
+
+| **flow.from\_city** | **flow.to\_city** | **year** | **migration** |
+| --- | --- | --- | --- |
+| sto | bos | 2015 | 38575 |
+| bos | sto | 2015 | 745 |
+
+| **city** | **name** |
+| --- | --- |
+| sto | Stockholm |
+| bos | Boston |
+
+In the above example, if we didn&#39;t use roles, we would have two flow.city headers. That would mean you don&#39;t know which column is the origin and which the destination. Also, it would break the rule that all column headers have to be unique.
+
+3.3.2 Large composite concepts
+
+A last example is when one indicator might have multiple sub-indicators. An example from the wild is the[IMHE Global Burden of Disease data set.](http://ghdx.healthdata.org/global-burden-disease-study-2013-gbd-2013-data-downloads-full-results) This dataset has 4 indicators: deaths, yll, yld and daly (see the link for explanations). Each of these have number, ratio and percent values. Moreover, all of those again have a mean, lower and upper value. That makes for a total of 9 sub-indicators for each indicator. The following shows how composite concepts can help in structuring this data.
+
+| **concept** | **concept\_type** | **domain** |
+| --- | --- | --- |
+| gbd\_indicator | composite | [nm\_lower, nm\_mean, nm\_upper, rt\_lower, rt\_mean, rt\_upper, pc\_lower, pc\_mean, pc\_upper] |
+| death | role | gbd\_indicator |
+| yld | role | gbd\_indicator |
+| daly | role | gbd\_indicator |
+| yll | role | gbd\_indicator |
+| number | measure | 0 \&lt;= x |
+| nm\_upper | role | number |
+| nm\_mean | role | number |
+| nm\_lower | role | number |
+| rate | measure | 0 \&lt;= x |
+| rt\_lower | role | rate |
+| rt\_mean | role | rate |
+| rt\_upper | role | rate |
+| percent | measure | 0 \&lt;= x \&lt;= 1 |
+| pc\_lower | role | percent |
+| pc\_mean | role | percent |
+| pc\_upper | role | percent |
+| location | entity\_domain |   |
+| name | string |   |
+
+| **location** | **year** | **death.nm\_mean** | **death.nm\_lower** | **...** | **yll.pc\_upper** |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 2015 | 49858 | 7567656 | ... | 0.48 |
+| 1 | 2015 | 46346 | 645746 | ... | 0.54 |
+
+| **location** | **name** |
+| --- | --- |
+| 1 | Global |
+
+3.3.3 Nesting composite concepts
+
+The above is not the sole perfect way of modelling the GBD data set. Many other ways of structuring are possible. It&#39;s up to the data modellers what exact structure they will use. Another choice is to nest composite concepts further like below:
+
+| **concept** | **concept\_type** | **domain** |
+| --- | --- | --- |
+| gbd\_indicator | composite | [nm, rt, pc] |
+| death | role | gbd\_indicator |
+| yld | role | gbd\_indicator |
+| daly | role | gbd\_indicator |
+| yll | role | gbd\_indicator |
+| nm | composite | [nm\_lower, nm\_mean, nm\_upper] |
+| rt | composite | [rt\_lower, rt\_mean, rt\_upper] |
+| pc | composite | [pc\_lower, pc\_mean, pc\_upper] |
+| number | measure | 0 \&lt;= x |
+| nm\_upper | role | number |
+| nm\_mean | role | number |
+| nm\_lower | role | number |
+| rate | measure | 0 \&lt;= x |
+| rt\_lower | role | rate |
+| rt\_mean | role | rate |
+| rt\_upper | role | rate |
+| percent | measure | 0 \&lt;= x \&lt;= 1 |
+| pc\_lower | role | percent |
+| pc\_mean | role | percent |
+| pc\_upper | role | percent |
+| location | entity\_domain |   |
+| name | string |   |
+| year | time |   |
+
+| **location** | **year** | **death.nm.nm\_mean** | **death.nm.nm\_lower** | **...** | **yll.pc.pc\_upper** |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 2015 | 49858 | 7567656 | ... | 0.48 |
+| 1 | 2014 | 46346 | 645746 | ... | 0.54 |
+
+| **location** | **name** |
+| --- | --- |
+| 1 | Global |
+
+DDF step 4: Metadata
+
+Metadata is data about data. For example: the male population of Sweden in 2015 is 99483857. This is data. The metadata for this data would be its source (UN Population statistics), accuracy (5%) and notes. The female population of sweden in 2015 might have a different source, accuracy and note. Same thing for the same data for 2016.
+
+This example shows metadata can be as detailed as describing one specific number in the dataset, one value of a datapoint. Therefore, in DDF we define metadata as a property of one key-value pair of data in a collection. So in the table below all 6 cells in the value columns can have their own vastly different metadata.
+
+However, it is possible that fields share the same metadata. For example, in the table above, all population data has the same source. Or the income data from years 1950-2015 has the same accuracy, while 2016 and onwards has a different accuracy.
+
+Just like with datapoints, entities and concepts, the column headers of metadata are concepts and need to be defined in the dataset as a concept with a concept type. So for the above table, the dataset concepts collection needs to include the note, acc and src concepts.
+
+How metadata is modelled depends on the format. The table above is just for explanatory purposes, it does not represent how metadata is formatted in DDFcsv. Read the documentation of [DDFcsv metadata](https://docs.google.com/document/d/1aynARjsrSgOKsO1dEqboTqANRD1O9u7J_xmxy8m5jW8/edit#heading=h.uomrxkt6aqjw) for more info on the tabular format.
+
+DDF step 5: Language and translations
+
+All strings in a DDF dataset MUST be available in at least one language. They MAY be available in more languages. One language MUST be complete and be the fallback language when other languages have incomplete translations.
+
+Language identifier
+
+DDF datasets MUST identify the original language or translations using a language identifier as per the [Unicode Technical Report #35](http://www.unicode.org/reports/tr35/#Unicode_language_identifier).
+
+UTR#35 is very close to the RFC standard (BCP 47) &quot;[Tags for the Identification of Languages](https://tools.ietf.org/html/bcp47)&quot;. The unicode standard has some additional compatibility built in. Transforming a Unicode language identifier to a BCP 47 language tag [is simple](http://www.unicode.org/reports/tr35/#BCP_47_Language_Tag_Conversion). [This document](https://docs.google.com/document/d/11FUVvPVLAorvETWRyDXvF8SucMfCT40II60vgVOY06M/edit) contains a bit more information about the standards. More friendly overviews like [this one](http://www.i18nguy.com/unicode/language-identifiers.html) will often be accurate enough to help choosing the right language tag.
+
+Context matters
+
+A simple string to string dictionary does not suffice for DDF dataset translations. For example the short name of [Rome, Italy](https://en.wikipedia.org/wiki/Rome) and [Rome, Georgia, US](https://en.wikipedia.org/wiki/Rome,_Georgia), are the same in English (Rome and Rome), but different in Italian ([Roma](https://it.wikipedia.org/wiki/Roma) and [Rome](https://it.wikipedia.org/wiki/Rome_(Georgia))). Therefore it must always be possible to translate the two city names to different strings. In more general terms: Translations are context-dependent. The key to the data defines the context, the string in one language does not give enough context.
+
+For example: City key-value pairs in English
+
+| _key_ | _value_ |
+| --- | --- |
+| **city** | **name** |
+| ita\_rme | Rome |
+| us\_geo\_rme | Rome |
+
+City key-value pairs in Italian
+
+| _key_ | _value_ |
+| --- | --- |
+| **city** | **name** |
+| ita\_rme | Roma |
+| us\_geo\_rme | Rome |
+
+The specifics of how to model these languages are up to the specific DDF format definition, e.g. as in [DDFcsv](https://docs.google.com/document/d/1aynARjsrSgOKsO1dEqboTqANRD1O9u7J_xmxy8m5jW8/edit#heading=h.wwltud39groy).
+
+DDF Step 6: Synonyms
+
+A synonym is a string which can identify a concept or entity present in the dataset. The synonyms collection contains entity and concept ids with their synonyms.
+
+_E.g.: The country entity_ _deu_ _has synonyms &quot;ger&quot;, &quot;de&quot; and &quot;Federal Republic of Germany&quot;._
+
+Synonyms are used to find identical concepts and entities in other datasets for semantic harmonization (i.e. translating a dataset from one namespace to another).
+
+Synonyms are different from translations (Step 5). Translations are for human consumption, for presenting the data to users. Synonyms are for harmonizing datasets. Nonetheless you could use translations to enlarge your set of synonyms for harmonization.
+
+The primary key in this collection is compound: both the concept/entity and its synonym together form the key. The concept used for the synonyms MUST be synonym. The concept used for the concept/entity MUST be concept for concepts or the entity domain or entity set (e.g. geo or gender) for entities. Additional properties can be added, such as the source of the synonym.
+
+Synonyms MUST be unique in the entity domain or concepts collection. E.g. &quot;Congo&quot; can only be used for one of the two countries &quot;Republic of the Congo&quot; and &quot;The Democratic Republic of the Congo&quot;. But &quot;Congo&quot; can be used as a synonym for both a country and a company if they are two different entity domains.
+
+| _key_ | _value_ |
+| --- | --- |
+| **country** | **synonym** | **source** |
+| deu | Deutschland | German name |
+| deu | Germany | English name |
+| deu | de | ISO 3166-1 alpha-2 |
+| deu | Federal Republic of Germany | Full english name |
+| deu | 276 | ISO 3166-1 numeric |
+| swe | Sweden |   |
+| swe | se | ISO 3166-1 alpha-2 |
+| ... | ... | ... |
+
+
+
+| _key_ |
+| --- |
+| **concept** | **synonym** |
+| population\_total | population |
+| population\_total | pop |
+| life\_expectancy | lex |
+| life\_expectancy | Life expectancy at birth |
+| ... | ... |
+
+#
+_A concepts-table enumerates all concepts in the dataset, including entity domains and entity sets. For now, we will only focus on the enumeration of entity domains and entity sets. More info about the concepts-table can found in step 3._
 
 ----------------------
 
