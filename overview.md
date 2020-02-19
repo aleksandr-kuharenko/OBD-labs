@@ -149,30 +149,30 @@ A dataset must have Concepts and may have DataPoints, Entities, Metadata or Syno
 
 **Unique key-value pairs**
 
-Each one of these collections consists of key-value pairs. Every key-value pair is unique in the whole data set.
+Кожна з цих колекцій складається з пар ключових значень. Кожна пара ключ-значення унікальна у всьому наборі даних.
 
-A concrete example: In one dataset, there can only exist one value for: The population of germany in 2015, the official long name of Germany, the unit of measurement for population or the source for all population data for germany in 2015.
+Конкретний приклад: В одному наборі даних може існувати лише одне значення для: Населення Німеччини у 2015 році, офіційне довге найменування Німеччини, одиниця вимірювання для населення чи джерело для всіх даних про населення для Німеччини у 2015 році.
 
-DDF model in graphics
+Модель DDF в графіці
 
-The image below is a graphical overview of the DDF model. The first part shows all the concept types in DDF. The lower part shows the types of data stored in DDF.
+Зображення нижче - це графічний огляд моделі DDF. У першій частині показані всі типи понять у DDF. У нижній частині показані типи даних, що зберігаються в DDF.
 
  ![](https://lh4.googleusercontent.com/ZsHWcbe733jyoLSOj5DjEvTdTbMpXjeAuJxBzenWVAb--CrymndiJeWyPHoMo2_b-lv_Dl_ZYlLmvQ3rpDWUl7WMX5sTCdLrraHKf7zBMu-HM3oIxmSZ9eVJJ2K-QidpBRfmNE1S=s650)
 
-## A stepwise introduction to DDF.
+## Покроковий вступ до DDF.
 
-This document will explain the functionalities of DDF, step by step, with increasing complexity. First, simple data storage in _DataPoints_. Second, defining single-dimensional data in _Entities_. Third, giving information about your column headers in _Concepts_. Fourth, giving information about your data in _Metadata_.
+Цей документ пояснить функціональність DDF поетапно зі збільшенням складності. По-перше, просте зберігання даних у _DataPoints_. По-друге, визначення одновимірних даних у _Entities_. По-третє, надання інформації про заголовки стовпців у _Concepts_. По-четверте, надання інформації про ваші дані в _Metadata_.
 
-Tip: Keep the overview above next to you as a quick reference while reading this introduction. Either print it out or open it in a separate window/screen. Furthermore, look at the [systema globalis](https://github.com/open-numbers/ddf--gapminder--systema_globalis/tree/newdefinition) dataset to see if you can understand its structure with this guide.
+Порада: Тримайте наведений вище огляд поруч із собою, як швидкий довідник, читаючи цей вступ. Або роздрукуйте його або відкрийте в окремому вікні / екрані. Крім того, подивіться на набір даних [systema globalis] (https://github.com/open-numbers/ddf--gapminder--systema_globalis/tree/newdefinition), щоб дізнатися, чи можете ви зрозуміти його структуру за допомогою цього посібника.
 
-DDF step 1: Data is stored in DataPoints
+Крок 1 DDF: Дані зберігаються в DataPoints
 
-Data in DDF is stored in key-value pairs called DataPoints. The key consists of _two or more_ dimensions while the value consists of _one_ indicators.
+Дані в DDF зберігаються в парах ключових значень під назвою DataPoints. Ключ складається з _two або більше_ розмірів, тоді як значення складається з _one_ індикаторів.
 
-The below table shows
+Нижче наведена таблиця
 
-1. DataPoints with key: country and year, value: government\_type
-2. DataPoints with key: country and year, value: population
+1. Точки даних з ключем: країна та рік, значення: уряд \ тип
+2. Точки даних з ключовими словами: країна та рік, значення: кількість населення
 
 |   | _key: Dimensions_ | _values: Indicators_ |
 | --- | --- | --- |
@@ -182,26 +182,26 @@ The below table shows
 | Sweden | 2015 | parliamentary democracy | 9504847 |
 | ... | ... | ... |   |
 
-1.1 Concepts, dimensions and indicators
+1.1 Поняття, розміри та показники
 
-A quick introduction to concepts is necessary, further detailed explanation follows in step 3.
+Необхідно швидке введення понять, подальше детальне пояснення слідує на кроці 3.
 
-- A **concept** is anything that can be a _column header_ in a table.
-In the table above, country, year and government\_type are all concepts.
-- A **concept type** signifies the datatype of the values under a certain concept.
-Types defined in DDF are _string, measure_ (numeric)_, boolean, interval, time_ and the more DDF-specific _entity domain, entity set and role_. The former speak for themselves while the latter will be explained in step 2, entities.
-In the table above, country and government\_type are concepts with a _entity\_domain_ concept type, year has a _time_ concept type and population has a _measure_ concept type.
+- Концепція ** - це все, що може бути заголовком _ стовпця_ у таблиці.
+У таблиці вище, країна, рік та уряд \ _тип - це всі поняття.
+- Тип концепції ** ** означає тип даних значень під певним поняттям.
+Типи, визначені в DDF, це _string, mjera_ (числовий) _, булевий, інтервал, час_ і більше домен _entity, специфічний для DDF, набір сутності та роль_. Перші говорять самі за себе, тоді як другі будуть пояснені на кроці 2, сутності.
+У таблиці вище, країна та уряд \ _тип - це поняття з типом концепції _entity \ _domain_, рік має тип концепції _time_, а населення має тип концепції _measure_.
 
 In DDF DataPoints:
 
-- A **dimension** is a concept in the key of the DataPoint key-value pair. In statistics, a concept in the key is called an independent variable.
-In the table above, country and year are dimensions forming the key to the indicator.
-- An **indicator** is a concept in the value-part of the DataPoint key-value pair. In statistics the indicator would be called a dependent variable, because its value is dependent on the key.
-In the table above government\_type and population are the indicators.
+- **розмірність** - це поняття в ключі пари ключ-значення DataPoint. У статистиці поняття в ключі називається незалежною змінною.
+У таблиці вище, країна та рік - це розміри, які є ключовими для показника.
+- **Індикатор** - це поняття в частині значення пари пари ключ-значення DataPoint. У статистиці індикатор можна назвати залежною змінною, оскільки його значення залежить від ключа.
+У таблиці вище показники уряду \ _ тип та чисельність населення.
 
-One concept is not _either_ a dimension _or_ an indicator. Within the same dataset, a concept is _just_ a column header in a tabular format, with one defined meaning. This definition is discussed in step 3.
+Одне поняття не є ні те, ні розмірність, ні показник. У цьому ж наборі даних концепція - _just_ заголовок стовпця у табличному форматі з одним визначеним значенням. Це визначення обговорюється на кроці 3.
 
-The tables below show the concept &#39;leader&#39; as both an indicator and a dimension.
+У таблицях нижче показаний лідер концепції як індикатор, так і вимір.
 
 |   | _key: Dimensions_ | _value: Indicator_ |
 | --- | --- | --- |
@@ -213,11 +213,11 @@ The tables below show the concept &#39;leader&#39; as both an indicator and a di
 | Concepts | **leader** | **year** | **approval\_rating** |
 | DataPoints | Angela Merkel | 2015 | 0.48 |
 
-1.2 Dimensions as a key for a DataPoint
+1.2 Розміри як ключові для DataPoint
 
-Dimensions are the concepts making up the key in DataPoints. DataPoints in DDF are often used to store changes over years and geographic locations. Therefore, these show up as the key dimensions in many examples in this document, such as in the table on the previous page.
+Розміри - це поняття, що складають ключ у DataPoints. Точки даних у DDF часто використовуються для зберігання змін за роки та географічні місця. Таким чином, вони відображаються як основні виміри у багатьох прикладах цього документа, наприклад, у таблиці на попередній сторінці.
 
-However, one can imagine any number of dimensions to be added to further refine the key:
+Однак можна уявити будь-яку кількість параметрів, які потрібно додати для подальшого уточнення ключа:
 
 | _key: Dimensions_ | _value: Indicators_ |
 | --- | --- |
@@ -227,7 +227,7 @@ However, one can imagine any number of dimensions to be added to further refine 
 | Sweden | 2015 | male | 5-9 | 495 494 |
 | ... | ... | ... | ... | ... |
 
-Moreover, DDF is not restricted to time and geographic places. Any kind of indicator for any set of dimensions can be stored using DDF:
+Більше того, DDF не обмежений часом та географічними місцями. За допомогою DDF можна зберігати будь-який тип індикатора для будь-якого набору розмірів:
 
 | _key: Dimensions_ | _value: Indicators_ |
 | --- | --- |
@@ -237,9 +237,9 @@ Moreover, DDF is not restricted to time and geographic places. Any kind of indic
 | Javascript | microsoft | 6594 |
 | ... | ... | ... |
 
-Dimensions are limited to being of the concept\_type entity domain, entity set or time. The exact meaning of these concept types will be further discussed in the rest of the document.
+Розміри обмежуються наявністю домену поняття \ _ типу сутності, набору сутності чи часу. Точне значення цих типів поняття буде розглянуто далі в решті документа.
 
-Dimensions can be of any type. They can be strings, like in the table above. However, they can also be measures like in the table below. In this table, the measures latitude and longitude are used as dimensions for the indicator temperature.
+Розміри можуть бути будь-якого типу. Вони можуть бути рядками, як у таблиці вище. Однак вони також можуть бути заходами, як у таблиці нижче. У цій таблиці вимірювання широти та довготи використовуються як розміри для температури індикатора.
 
 | _key: Dimensions_ | _value: Indicators_ |
 | --- | --- |
@@ -248,9 +248,9 @@ Dimensions can be of any type. They can be strings, like in the table above. How
 | 91 | 10 | 31 |
 | ... | ... | ... |
 
-1.3 Indicators
+1.3 Показники
 
-The set of indicators can be expanded to represent more data for a certain set of dimensions. In the table below, data for population and life expectancy is given for the dimensions country and year.
+Набір показників можна розширити, щоб представити більше даних для певного набору розмірів. У таблиці нижче наведені дані щодо кількості населення та тривалості життя для розмірів країни та року.
 
 | _key: Dimensions_ | _value: Indicators_ |
 | --- | --- |
@@ -260,7 +260,7 @@ The set of indicators can be expanded to represent more data for a certain set o
 | Norway | 2015 | 5 165 000 | 80.69 |
 | ... | ... | ... |   |
 
-An indicator does not have to be continuous or even numeric in nature. The table below shows the concept government\_type as an indicator, which is discrete and categorical.
+Індикатор не повинен мати суцільний або навіть числовий характер. У таблиці нижче показано поняття уряд \ _ як індикатор, який є дискретним та категоричним.
 
 | _key: Dimensions_ | _value: Indicators_ |
 | --- | --- |
@@ -269,24 +269,22 @@ An indicator does not have to be continuous or even numeric in nature. The table
 | Germany | 1990 | parliamentary democracy |
 | ... | ... | ... |
 
-_Disclaimer: this is a simplified version of Germany&#39;s transformation during the last century_
+Крок 2 DDF: Суб'єкти
 
-DDF step 2: Entities
+На цьому кроці вводяться наступні терміни:
 
-The following terms are introduced in this step:
+- **Властивість** надає додаткову інформацію про дискретну концепцію.
+Наприклад, країна-концепція може мати властивості full \ _name, широту або довготу.
+- Домен **сутності** - це дискретна концепція, в якій перераховані всі можливі значення. Таким чином, він чітко визначає область поняття. Більше того, перерахування всіх можливих значень дає можливість визначити властивості для кожного значення.
+Наприклад, ми можемо перетворити країну в домен юридичної особи, перерахувавши всі країни. Роблячи це, ми можемо визначити повну назву, широту та довготу для кожної країни.
+- **Суб'єкт** - це одне значення у домені сутності.
+Наприклад, Швеція чи Росія є суб'єктами, що перебувають у країні, що належить до юридичної особи.
+- **Набір об'єктів** - це сукупність об'єктів у межах сутності.
+Наприклад, замість домену сутності країна може бути сутністю, встановленою в географічних місцях домену об'єкта, поряд з іншими наборами об'єктів, такими як місто, світ \ регіон та провінція.
 
-- A **property** provides additional information about a discrete concept.
-For example, the concept country can have properties full\_name, latitude or longitude.
-- An **entity domain** is a discrete concept which has all of its possible values enumerated. This way, it explicitly defines the domain of the concept. Moreover, enumerating all possible values makes it possible to define properties for each value.
-For example, we can turn country into an entity domain by enumerating all countries. By doing so, we can define the full name, latitude and longitude for each country.
-- An **entity** is one value within an entity domain.
-For example Sweden or Russia are entities in the entity domain country.
-- An **entity set** is a set of entities within an entity domain.
-For example, instead of an entity domain, country can be an entity set within an entity domain geographic places, next to other entity sets such as city, world\_region and province.
+2.1 Домени, властивості та об'єкти сутності
 
-2.1 Entity domains, properties and entities
-
-In the table below, country is the entity domain. Full\_name, latitude and longitude are the properties. Sweden, Norway and Russia are the entities.
+У таблиці нижче країна - це домен юридичної особи. Повна \ _ ім'я, широта та довгота - це властивості. Швеція, Норвегія та Росія - це суб'єкти.
 
 |   | _key: Entity domain_ | _values: Properties_ |
 | --- | --- | --- |
@@ -295,13 +293,13 @@ In the table below, country is the entity domain. Full\_name, latitude and longi
 | norway | Kingdom of Norway | 61.0000 | 8.0000 |
 | russia | Russian Federation | 60.0000 | 90.0000 |
 
-2.1.1 Entity identifiers
+2.1.1 Ідентифікатори особи
 
-Each entity is represented by an unique identifier in the entity domain column. This identifier is unique, but only within the entity domain. **Entity identifiers can only contain lowercase alphanumeric characters and underscores.**
+Кожен об'єкт представлений унікальним ідентифікатором у стовпці домену сутності. Цей ідентифікатор унікальний, але лише в межах юридичної особи. **Ідентифікатори особи можуть містити лише рядкові буквено-цифрові символи та підкреслення.**
 
-The identifier does not have to be the name of the entity but should nonetheless be meaningful. In other words, it is not recommended to use self-generated numeric identifier.
+Ідентифікатор не повинен бути назвою сутності, але, тим не менш, повинен бути значимим. Іншими словами, не рекомендується використовувати самогенерований числовий ідентифікатор.
 
-For example, the table below uses lowercase iso 3-character country codes as the identifier and stores the short name as a string-property &#39;name&#39;.
+Наприклад, у таблиці нижче використовується ідентифікатор 3-символьних кодів країни як ідентифікатор і зберігається коротке ім'я як ім'я властивості рядка.
 
 |   | _key: Entity domain_ | _value: Properties_ |
 | --- | --- | --- |
@@ -310,11 +308,11 @@ For example, the table below uses lowercase iso 3-character country codes as the
 | nor | Norway | Kingdom of Norway | 61.0000 | 8.0000 |
 | rus | Russia | Russian Federation | 60.0000 | 90.0000 |
 
-2.2 Entity sets
+2.2 Набори сутності
 
-An entity set is a set of entities within an entity domain. An entity domain is itself an entity set containing all the entities in that domain. For example, the entity domain &#39;geographic places&#39; or &#39;geo&#39; is itself an entity set of all geographic places. Furthermore, it can have the sets world regions, countries, cities and neighbourhoods. Each of these sets would have the corresponding entities as their members. All the countries in the countries set, all cities in the cities set, et cetera. All these sets share the same domain: &#39;geo&#39;; the entities in them are all geographic places.
+Набір суб'єктів - це сукупність об'єктів у межах сутності. Домен сутності - сам набір об'єктів, що містить усі сутності цього домену. Наприклад, географічні місця домену сутності або гео - це сам набір сутностей усіх географічних місць. Крім того, він може мати безліч регіонів світу, країн, міст та мікрорайонів. Кожен із цих наборів мав би відповідні суб'єкти в якості своїх членів. Всі країни у встановлених країнах, усі міста в містах, і так далі. Усі ці набори мають один і той же домен: geo; сутності в них - це всі географічні місця.
 
-An entity&#39;s membership of an entity set is indicated by an is--\&lt;entity\_set\&gt; property, with a boolean value.
+Приналежність сукупності до сукупності сутностей вказується сутністю \ set; властивість, з булевим значенням.
 
 | _key: Entity domain_ | _value: Properties_ |
 | --- | --- |
@@ -324,7 +322,7 @@ An entity&#39;s membership of an entity set is indicated by an is--\&lt;entity\_
 | swe | Sweden | true | false |
 | ... | ... | ... | ... |
 
-The entity domain and entity sets (with their domain) are defined in the concepts table1.
+Сукупність доменів і сутностей (з їх доменом) визначена в таблиці понять1.
 
 | _key: concept_ | _value: concept properties_ |
 | --- | --- |
@@ -335,9 +333,9 @@ The entity domain and entity sets (with their domain) are defined in the concept
 | city | entity\_set | geo |
 | ... | ... | ... |
 
-2.2.1 Membership of multiple sets
+2.2.1 Членство в декількох групах
 
-An entity can belong to zero or more sets within its entity domain. Membership of multiple sets is indicated simply by having multiple is--\&lt;entity\_set\&gt; properties set to true. An entity can only be member of sets within its entity domain.
+Суб'єкт може належати до нуля або більше наборів у межах свого домену. Членство в декількох наборах вказується просто наявністю декількох це - сутність \ set; властивості, встановлені на true. Суб'єкт може бути лише членом наборів у межах своєї області.
 
 | _key: Entity domain_ | _values: Properties_ |
 | --- | --- |
@@ -347,33 +345,33 @@ An entity can belong to zero or more sets within its entity domain. Membership o
 | sto | Stockholm | false | true |
 | ... | ... | ... | ... |
 
-2.2.2 Entity domains and entity sets
+2.2.2 Суб'єкти доменів та набори сутностей
 
-Both entity domains and entity sets group entities. But there are some important differences. The examples in the list below refer to the following venn-diagram:
+Як домени сутності, так і сукупності сукупностей об'єктів групи. Але є деякі важливі відмінності. Приклади у списку нижче посилаються на наступну venn-діаграму:
 
  ![](https://i.ibb.co/yVsjMcR/Screenshot-from-2020-02-19-13-14-00.png)
 
-- An entity set álways has an entity domain to which it belongs.
-_Example: the entity sets city and country exist within the domain geo. They cannot exist outside the domain geo. Unless we would make them entity domains themselves._
+- Набір суб'єкта господарювання завжди має домен сутності, до якого він належить.
+_Приклад: сутність встановлює, що місто та країна існують у домені geo. Вони не можуть існувати за межами домену geo. Якщо тільки ми не зробимо їх власними доменами._
 
-- An entity set can not overspan domains. They are always confined to one domain.
-_Example: the entity sets city, country, binary gender and non-binary gender stay within their entity domains._
+- Набір об'єктів не може перевищувати домени. Вони завжди обмежені одним доменом.
+_Приклад: суб'єкт господарювання встановлює місто, країну, бінарний гендерний та небінарний гендерний підхід у межах своїх доменів.
 
-- Entity sets can overlap within their domain. In other words: entities can be member of multiple sets within their domain.
-_Example: hong kong is both a city and a country. female is both a binary gender and non-binary gender_
+- Набори суб'єктів можуть перетинатися в межах свого домену. Іншими словами: суб'єкти можуть бути членами декількох наборів у межах свого домену.
+Приклад: Гонконг - це місто і країна. жінка - це і двійкова стать, і небінарний гендер
 
-- An entity-id is unique within one domain.
-_Example:__both entity domains geo and gender have only one entity with id &#39;male&#39;, they cannot have more than one entity with id &#39;male&#39; each. There is only one entity hong\_kong within geo and it&#39;s member of the sets city and country._
+- Ідентифікатор сутності унікальний у межах одного домену.
+_Приклад: __в обох доменах сутностей гео та стать мають лише одне ціле з чоловіком; кожен. В межах гео є лише одна сутність \ hong \ _kong, і вона є членом міста та країни._
 
-- An entity-id is not unique across domains.
-_Example: The two &#39;male&#39; entities in the geo and gender domains are not the same entity. In gender it refers to the male gender, in geo it refers to the city Malé in the Maldives._
+- Ідентифікатор сутності не є унікальним для всіх доменів.
+Приклад: Дві чоловічі сутності в гео та гендерній області не є однаковою сутністю. За гендерною ознакою це стосується чоловічої статі, в гео - це місто Мале на Мальдівах._
 
 
-2.2.3 Properties of entities in different entity sets
+2.2.3 Властивості сутностей у різних сукупностях сутності
 
-Entities in different sets can have different properties. A country might have an anthem while a city doesn&#39;t. In the table below countries and regions, both being entity sets in the domain geo, have different properties.
+Суб'єкти в різних наборах можуть мати різні властивості. У країні може бути гімн, поки місто не хоче. У таблиці нижче країни та регіони, які є сукупностями об'єктів у домені geo, мають різні властивості.
 
-The absence of an is--\&lt;entity\_set\&gt; property for a certain entity infers that its value is false, i.e. it is not a member of that set. In the table below the absence of is--region and is--city infers none of the countries is a region or a city.
+Відсутність об'єкта \ _set; властивість для певної сутності вважає, що її значення є помилковим, тобто воно не є членом цього набору. У таблиці нижче відсутність міста - регіону та міста - визначає, що жодна з країн не є регіоном чи містом.
 
 | _key: Entity domain_ | _value: Properties_ |
 | --- | --- |
@@ -383,7 +381,7 @@ The absence of an is--\&lt;entity\_set\&gt; property for a certain entity infers
 | rus | Russia | Боже, Царя храни! | true |
 | ... | ... |   | ... |
 
-Similarly, in the table below, the absence of is--country and is--city infers none of the regions is a country or city.
+Аналогічно, у таблиці нижче відсутність міста - країни та міста - жодного з регіонів не визначає країна чи місто.
 
 | _key: Entity domain_ | _value: Properties_ |
 | --- | --- |
@@ -392,9 +390,9 @@ Similarly, in the table below, the absence of is--country and is--city infers no
 | eur | Europe | true |
 | ... | ... | ... |
 
-2.2.4 Entity set hierarchy
+2.2.4 Ієрархія набору об'єктів
 
-A hierarchy in the entity sets can be defined through a drill\_up property on an entity set.
+Ієрархія в наборах сутності може бути визначена через властивість drill \ _up набору сутності.
 
 | _key: concept_ | _value: concept properties_ |
 | --- | --- |
@@ -405,9 +403,9 @@ A hierarchy in the entity sets can be defined through a drill\_up property on an
 | city | entity\_set | geo | country |
 | ... | ... | ... |   |
 
-Each set which can drill up to another set, has a concept-property drill\_up with the identifier of that set. In the example above, a country drills up to a region, so the entity set country has region as drill\_up.
+Кожен набір, який може розгортатися до іншого набору, має свердло властивості concept \ _up з ідентифікатором цього набору. У наведеному вище прикладі країна розширюється до регіону, тому країна, що встановлює суб'єкт господарювання, має регіон як свердло \ _up.
 
-Every entity in the set then defines which entity in the drill-up set it drills up to. In the example below, the country Sweden drills up to the region Europe while the country Namibia drills up to the region Africa.
+Кожна сукупність у наборі потім визначає, до якої сукупності в наборі деталізованих даних вона використовується. У наведеному нижче прикладі країна Швеція розгортається до регіону Європа, а країна Намібія - до Африки.
 
 | _key: Entity domain_ | _value: Properties_ |
 | --- | --- |
@@ -423,9 +421,9 @@ Every entity in the set then defines which entity in the drill-up set it drills 
 | nam | Namibia | true | afr |
 | ... | ... | ... |   |
 
-2.2.4.1 Multiple drill ups
+2.2.4.1 Кілька свердловин
 
-An entity set can drill up to one or more other entity sets, including itself. The order in which the drill up-sets are placed, defines priority of drill up. This is important when traversing the data set. For example, when a user is looking at population statistics of cities and wants to drill up, the visualization software can look for population statistics in the order of the drill ups. If the value for drill up is &#39;country, region&#39;, it will first look for population statistics per country. If these are not available it will search for population statistics per region.
+Набір об'єктів може висвердлювати до одного або декількох інших наборів сутності, включаючи себе. Порядок, в якому розміщуються комплекти свердловин, визначає пріоритет свердління. Це важливо при обході набору даних. Наприклад, коли користувач переглядає статистику чисельності населення міст і хоче розробити інформацію, програмне забезпечення для візуалізації може шукати статистику населення в порядку чергових розробок. Якщо значення для розробки є країною, регіоном, воно спочатку шукатиме статистику чисельності населення в країні. Якщо таких немає в наявності, він здійснюватиме пошук статистики населення в кожному регіоні.
 
 | _key: concept_ | _value: concept properties_ |
 | --- | --- |
@@ -454,13 +452,13 @@ An entity set can drill up to one or more other entity sets, including itself. T
 | sto | Stockholm | true | eur | swe |
 | win | Windhoek | true | afr | nam |
 
-DDF step 3: Concepts and concept properties
+Крок 3 DDF: Поняття та властивості поняття
 
-Concepts are the table headers anywhere in a DDF dataset. Concept properties are concepts which give information about concepts. A first peek into concept-properties was the entity domain and entity set enumeration and the properties concept\_type, domain and drill\_up.
+Поняття - це заголовки таблиць у будь-якому місці набору даних DDF. Властивості поняття - це поняття, які дають інформацію про поняття. Першим поглядом на властивості поняття було перерахування домену та сутності сутності та концепції властивостей \ _тип, домен та дриль \ _up.
 
-Any property of any concept can be defined in a similar way in DDF. All concepts used in the data-set should be enumerated and any property of these concepts can be defined in this enumeration. Below an example for a dataset similar to the ones used in previous examples. Also have a look in the [Systema Globalis](https://github.com/open-numbers/ddf--gapminder--systema_globalis/blob/master/ddf--concepts.csv) data set for an even larger enumeration of concepts.
+Будь-яка властивість будь-якої концепції може бути визначена аналогічно в DDF. Усі поняття, що використовуються в наборі даних, повинні бути перераховані, і будь-яка властивість цих понять може бути визначена в цьому перерахуванні. Нижче наведено приклад для набору даних, аналогічних тим, які використовувались у попередніх прикладах. Також ознайомтеся з набором даних [Systema Globalis] (https://github.com/open-numbers/ddf--gapminder--systema_globalis/blob/master/ddf--concepts.csv) для ще більшого перерахування поняття.
 
-Concept identifiers, the strings under the &#39;concept&#39; column header, follow the same rules as entity identifiers: **Concept identifiers can only contain lowercase alphanumeric characters and underscores.**
+Ідентифікатори поняття, рядки під заголовком стовпця концепції, дотримуються тих же правил, що і ідентифікатори сутності: **Ідентифікатори поняття можуть містити лише рядкові буквено-цифрові символи та підкреслення.**
 
 | _key: concept_ | _value: concept properties_ |
 | --- | --- |
@@ -481,35 +479,35 @@ Concept identifiers, the strings under the &#39;concept&#39; column header, foll
 | domain | string |   |   |   |   |
 | capital | role | city |   |   | http://... |
 
-Note in the above table:
+Примітка у наведеній таблиці:
 
-- Almost every single column header in the dataset is enumerated as a concept. The concept-properties themselves are álso concepts (unit, link).
-- The concept-properties concept, concept\_type, drill\_up and the is--\&lt;entity\_set\&gt; entity-properties are not enumerated. They are reserved concepts, a core part of DDF, and thus are not enumerated separately.
-- Unit itself is also an entity domain enumerating all units in the dataset.
+- Майже кожен заголовок кожного стовпця в наборі даних перераховується як поняття. Самі поняття-властивості - це також поняття (одиниця, посилання).
+- Концепція властивостей концепту, властивості, концепція \ _тип, свердління \ _ та і є - \ сутність \ _ набір; властивості сутності не перераховуються. Вони є зарезервованими поняттями, що є основною частиною DDF, і тому не перераховуються окремо.
+- Сам підрозділ - це також домен об'єкта, що перераховує всі одиниці в наборі даних.
 
-3.1 Concept types
+3.1 Типи понять
 
-DDF has a number of predefined concept types. A concept is given a type by setting the concept\_type property of the concept.
+DDF має ряд попередньо визначених типів концепцій. Концепція задається типу шляхом встановлення властивості концепту \ _type концепції.
 
-DDF also allows you to define your own concept types.
+DDF також дозволяє визначити власні типи понять.
 
-The predefined concept types are:
+Заздалегідь визначені типи понять:
 
 3.1.1 **string**
 
-A string of characters.
+Рядок символів.
 
 3.1.2 measure
 
-A numeric value.
+Числове значення.
 
 3.1.3 interval
 
-An interval between two numeric values.
+Інтервал між двома числовими значеннями.
 
-An interval is always an interval on a certain scale. The scale can be defined by adding a measure concept as the domain of the interval.
+Інтервал - це завжди інтервал у певній шкалі. Шкала може бути визначена, додавши поняття міри як область інтервалу.
 
-The value of an interval are two numbers in JSON array format.
+Значення інтервалу - це два числа у форматі масиву JSON.
 
 | **concept** | **concept\_type** | **domain** |
 | --- | --- | --- |
@@ -525,25 +523,25 @@ The value of an interval are two numbers in JSON array format.
 
 3.1.4 entity\_domain
 
-A concept which has all its possible values enumerated. See step 2.
+Поняття, яке перелічено всі можливі значення. Дивіться крок 2.
 
 3.1.5 entity\_set
 
-A concept which has all its possible values enumerated, limited to an entity domain. See step 2.
+Поняття, яке має усі перераховані всі можливі значення, обмежене лише суттю. Дивіться крок 2.
 
 3.1.6 role
 
-A role is an entity set which contains exactly the same entities as another entity set. Therefore, a role has another entity set as its domain. For more information about roles, read chapter 3.2 on the next page.
+Роль - це сукупність об'єктів, яка містить точно такі самі сутності, як і інша сукупність сутностей. Отже, роль має інший суб'єкт, встановлений як його домен. Для отримання додаткової інформації про ролі читайте розділ 3.2 на наступній сторінці.
 
 3.1.8 composite
 
-A composite concept is a concept which is a composition of two or more other concepts that belong together. For more information on composite concepts, please read chapter 3.3.
+Складене поняття - це поняття, яке являє собою композицію двох або більше інших понять, що належать разом. Для отримання додаткової інформації про складені поняття читайте розділ 3.3.
 
 3.1.9 Time
 
-The concept\_type time is a special case of an entity domain. The concepts year, month, day, week and quarter are special cases of entity sets in the entity domain time.
+Поняття \_тип часу - це окремий випадок домену сутності. Поняття рік, місяць, день, тиждень і квартал є особливими випадками наборів сутностей у доменному часі сутності.
 
-They are special cases because the entities are not explicitly enumerated. They are inferred by defined time formats. These formats mostly follow the ISO 8601 basic format. However, we use lower case and added the quarter interval.
+Вони є особливими випадками, оскільки суб'єкти не перелічені явно. Вони виводяться за визначеними форматами часу. Ці формати здебільшого відповідають базовому формату ISO 8601. Однак ми використовуємо малі регістри та додали четвертий інтервал.
 
 | **built-in time concept** | **format** | **example** |
 | --- | --- | --- |
@@ -554,34 +552,34 @@ They are special cases because the entities are not explicitly enumerated. They 
 | quarter | YYYYqQ | 2015q3 |
 | time | any of the above | any of the above |
 
-The time interval formats make them uniquely identifiable. The value can be parsed to find out if what interval it represents, i.e. there are no ambiguous time values.
+Формати часових інтервалів роблять їх однозначно ідентифікованими. Значення можна проаналізувати, щоб дізнатись, який інтервал воно представляє, тобто немає неоднозначних часових значень.
 
-If you want to use the concepts time, year, month, day, week and quarter in your dataset, all you need to do is define them in your concepts file with concept\_type of time. For example, if you want to use time and year:
+Якщо ви хочете використовувати поняття час, рік, місяць, день, тиждень і квартал у вашому наборі даних, все, що вам потрібно зробити, - це визначити їх у вашому файлі концепцій з концепцією \ _ тип часу. Наприклад, якщо ви хочете використовувати час і рік:
 
 | **concept** | **concept\_type** | **name** |
 | --- | --- | --- |
 | time | time | Any time |
 | year | time | Year |
 
-Use the concept year, month, day, week or quarter to limit the possible values to that format. Use the concept time to allow any of the formats.
+Використовуйте концепційний рік, місяць, день, тиждень або квартал, щоб обмежити можливі значення у цьому форматі. Використовуйте час концепції, щоб дозволити будь-який формат.
 
-The built in time concepts can be used under a different concept id by defining a role for them like below. Read more about roles in section 3.2.
+Вбудовані в часі концепції можна використовувати під іншим ідентифікатором поняття, визначаючи для них роль, як показано нижче. Детальніше про ролі читайте в розділі 3.2.
 
 | **concept** | **concept\_type** | **domain** |
 | --- | --- | --- |
 | day\_of\_delivery | role | day |
 | founding\_year | role | year |
 
-3.1.10 Custom concept types
+3.1.10 Спеціальні типи понять
 
-You can assign your own concept\_type to a concept as long as it is not one of the above reserved concept types. Concepts with a custom concept type have no restrictions on possible values. Examples are geo\_shapes, URL&#39;s or image BLOBs.
+Ви можете призначити власну концепцію \_type до концепції, якщо вона не є одним із перелічених вище типів концепції. Поняття зі спеціальним типом поняття не мають обмежень щодо можливих значень. Приклади - гео \ _форми, URL-адреси або графічні символи BLOB.
 
 3.2 Roles
 
-A role is a concept which has an entity set as its domain. This allows the use of the same entity set multiple times in a table, yet in a different _role_. An entity set can have zero or more roles.
-For example, capital is a role of city. Political\_capital is another role of city. Any value of capital or political\_capital has to be a reference to a city entity.
+Роль - це поняття, яке має об'єкт сукупності як свою область. Це дозволяє використовувати одне і те ж сукупність, встановлене кілька разів у таблиці, але в іншому _role_. Набір сутності може мати нульову або більше ролей.
+Наприклад, столиця - це роль міста. Політичний \ _капітал - це ще одна роль міста. Будь-яка цінність капіталу чи політичного капіталу повинна бути посиланням на місто.
 
-The tables below show an example. The first table defines countries, with their capitals and political capitals. The second table defines the cities. The third table, the concept-table, defines that capital and political\_capital are roles of city.
+Наведені нижче таблиці показують приклад. Перша таблиця визначає країни з їхніми столицями та політичними столицями. Друга таблиця визначає міста. Третя таблиця, концептуальна таблиця, визначає, що капітал та політичний капітал - це ролі міста.
 
 | **geo** | **name** | **capital** | **political\_capital** |
 | --- | --- | --- | --- |
@@ -603,9 +601,9 @@ The tables below show an example. The first table defines countries, with their 
 | political\_capital | role | city |
 | name | text |   |
 
-3.2.1 Roles as drill up
+3.2.1 Ролі під час свердління
 
-Roles can also be used as a drill up. When a role is used as a drill up, it drills up to the entity set which the role is a role of.
+Ролі також можна використовувати як свердління. Коли роль використовується як деталізація, вона визначається набором сутності, для якої є роль.
 
 | **concept** | **concept\_type** | **domain** | **drill\_up** |
 | --- | --- | --- | --- |
@@ -626,9 +624,9 @@ Roles can also be used as a drill up. When a role is used as a drill up, it dril
 | nld | Netherlands |
 | swe | Sweden |
 
-3.3 Composite concepts
+3.3 Складені поняття
 
-A composite concept is a combination of 2 or more other concepts. For example, the birth of a person might consist of a city and a year, always occurring together.
+Складене поняття - це поєднання 2 або більше інших понять. Наприклад, народження людини може складатися з міста і року, який завжди відбувається разом.
 
 | **concept** | **concept\_type** | **domain** |
 | --- | --- | --- |
@@ -647,9 +645,9 @@ A composite concept is a combination of 2 or more other concepts. For example, t
 | sto | Stockholm |
 | bos | Boston |
 
-3.3.1 Composite concepts and roles
+3.3.1 Складені поняття та ролі
 
-Another example is migration flow. This always happen from one place to another. In this case, we need roles to prevent duplication of table headers. The roles also add meaning to the use of &#39;city&#39;.
+Інший приклад - міграційний потік. Це завжди відбувається з одного місця в інше. У цьому випадку нам потрібні ролі, щоб запобігти дублюванню заголовків таблиць. Ролі також додають сенсу використанню міста.
 
 | **concept** | **concept\_type** | **domain** |
 | --- | --- | --- |
@@ -669,11 +667,11 @@ Another example is migration flow. This always happen from one place to another.
 | sto | Stockholm |
 | bos | Boston |
 
-In the above example, if we didn&#39;t use roles, we would have two flow.city headers. That would mean you don&#39;t know which column is the origin and which the destination. Also, it would break the rule that all column headers have to be unique.
+У наведеному вище прикладі, якби ми не використовували ролі, у нас було б два заголовки flow.city. Це означає, що ви не знаєте, який стовпець є початком, а який - адресою. Також було б порушено правило про те, що всі заголовки стовпців повинні бути унікальними.
 
-3.3.2 Large composite concepts
+3.3.2 Великі складові поняття
 
-A last example is when one indicator might have multiple sub-indicators. An example from the wild is the[IMHE Global Burden of Disease data set.](http://ghdx.healthdata.org/global-burden-disease-study-2013-gbd-2013-data-downloads-full-results) This dataset has 4 indicators: deaths, yll, yld and daly (see the link for explanations). Each of these have number, ratio and percent values. Moreover, all of those again have a mean, lower and upper value. That makes for a total of 9 sub-indicators for each indicator. The following shows how composite concepts can help in structuring this data.
+Останній приклад - коли один індикатор може мати кілька піддіапазонів. Приклад з диких країн - [набір даних IMHE Global Burden of Disease.] (Http://ghdx.healthdata.org/global-burden-disease-study-2013-gbd-2013-data-downloads-full-results) Цей набір даних має 4 показники: смерть, yll, yld та daly (див. Посилання для пояснень). Кожен з них має число, співвідношення та відсотки. Більше того, всі вони знову мають середнє, нижнє та верхнє значення. Це складає в цілому 9 піддіапазонів для кожного показника. Далі показано, як складені поняття можуть допомогти в структуруванні цих даних.
 
 | **concept** | **concept\_type** | **domain** |
 | --- | --- | --- |
@@ -706,9 +704,9 @@ A last example is when one indicator might have multiple sub-indicators. An exam
 | --- | --- |
 | 1 | Global |
 
-3.3.3 Nesting composite concepts
+3.3.3 Введення композиційних понять
 
-The above is not the sole perfect way of modelling the GBD data set. Many other ways of structuring are possible. It&#39;s up to the data modellers what exact structure they will use. Another choice is to nest composite concepts further like below:
+Вищезазначене - не єдиний ідеальний спосіб моделювання набору даних GBD. Можливе багато інших способів структурування. Це залежить від модельєрів даних, яку саме структуру вони використовуватимуть. Ще один вибір - це гніздування складених концепцій далі, як нижче:
 
 | **concept** | **concept\_type** | **domain** |
 | --- | --- | --- |
@@ -745,33 +743,31 @@ The above is not the sole perfect way of modelling the GBD data set. Many other 
 | --- | --- |
 | 1 | Global |
 
-DDF step 4: Metadata
+Крок 4 DDF: метадані
 
-Metadata is data about data. For example: the male population of Sweden in 2015 is 99483857. This is data. The metadata for this data would be its source (UN Population statistics), accuracy (5%) and notes. The female population of sweden in 2015 might have a different source, accuracy and note. Same thing for the same data for 2016.
+Метадані - це дані про дані. Наприклад: чоловіче населення Швеції у 2015 році становить 99483857. Це дані. Метаданими для цих даних були б його джерело (статистика населення ООН), точність (5%) та примітки. Жіноче населення Швеції у 2015 році може мати інше джерело, точність та увагу. Те саме для тих же даних за 2016 рік.
 
-This example shows metadata can be as detailed as describing one specific number in the dataset, one value of a datapoint. Therefore, in DDF we define metadata as a property of one key-value pair of data in a collection. So in the table below all 6 cells in the value columns can have their own vastly different metadata.
+Цей приклад показує, що метадані можуть бути такими ж детальними, як опис одного конкретного числа в наборі даних, одного значення точки даних. Тому в DDF ми визначаємо метадані як властивість однієї пари даних ключових значень у колекції. Отже, у таблиці нижче, всі 6 комірок у стовпцях значення можуть мати свої абсолютно різні метадані.
 
-However, it is possible that fields share the same metadata. For example, in the table above, all population data has the same source. Or the income data from years 1950-2015 has the same accuracy, while 2016 and onwards has a different accuracy.
+Однак можливо, що поля поділяють однакові метадані. Наприклад, у таблиці вище всі дані про населення мають одне джерело. Або дані про доходи за 1950–2015 роки мають однакову точність, тоді як 2016 рік і далі має різну точність.
 
-Just like with datapoints, entities and concepts, the column headers of metadata are concepts and need to be defined in the dataset as a concept with a concept type. So for the above table, the dataset concepts collection needs to include the note, acc and src concepts.
+Як і в точках даних, сутностях та поняттях, заголовки стовпців метаданих є поняттями і їх потрібно визначати в наборі даних як поняття з типом концепції. Отже, для наведеної вище таблиці збір концепцій набору даних повинен включати поняття note, acc та src.
 
-How metadata is modelled depends on the format. The table above is just for explanatory purposes, it does not represent how metadata is formatted in DDFcsv. Read the documentation of [DDFcsv metadata](https://docs.google.com/document/d/1aynARjsrSgOKsO1dEqboTqANRD1O9u7J_xmxy8m5jW8/edit#heading=h.uomrxkt6aqjw) for more info on the tabular format.
+Спосіб моделювання метаданих залежить від формату. Наведена вище таблиця призначена лише для пояснення, вона не представляє, як метадані форматуються в DDFcsv. Прочитайте документацію [метаданих DDFcsv] (https://docs.google.com/document/d/1aynARjsrSgOKsO1dEqboTqANRD1O9u7J_xmxy8m5jW8/edit#heading=h.uomrxkt6aqjw) для отримання додаткової інформації про формат таблиці.
 
-DDF step 5: Language and translations
+Крок 5 DDF: Мова та переклади
 
-All strings in a DDF dataset MUST be available in at least one language. They MAY be available in more languages. One language MUST be complete and be the fallback language when other languages have incomplete translations.
+Усі рядки в наборі даних DDF ОБОВ'ЯЗКОВО бути доступними принаймні однією мовою. Вони МОЖУТЬ доступні ще на кількох мовах Одна мова ОБОВ'ЯЗКОВА бути повною і бути запасною мовою, коли інші мови мають неповний переклад.
 
-Language identifier
+Мовний ідентифікатор
 
-DDF datasets MUST identify the original language or translations using a language identifier as per the [Unicode Technical Report #35](http://www.unicode.org/reports/tr35/#Unicode_language_identifier).
+Набори даних DDF ОБОВ'ЯЗКОВО ідентифікувати мову оригіналу або переклади за допомогою мовного ідентифікатора згідно з [Unicode Technical Report # 35] (http://www.unicode.org/reports/tr35/#Unicode_language_identifier).
 
-UTR#35 is very close to the RFC standard (BCP 47) &quot;[Tags for the Identification of Languages](https://tools.ietf.org/html/bcp47)&quot;. The unicode standard has some additional compatibility built in. Transforming a Unicode language identifier to a BCP 47 language tag [is simple](http://www.unicode.org/reports/tr35/#BCP_47_Language_Tag_Conversion). [This document](https://docs.google.com/document/d/11FUVvPVLAorvETWRyDXvF8SucMfCT40II60vgVOY06M/edit) contains a bit more information about the standards. More friendly overviews like [this one](http://www.i18nguy.com/unicode/language-identifiers.html) will often be accurate enough to help choosing the right language tag.
+Контекстні питання
 
-Context matters
+Простий словник з рядка на рядок не є достатнім для перекладів набору даних DDF. Наприклад, коротка назва [Рим, Італія] (https://en.wikipedia.org/wiki/Rome) та [Рим, Грузія, США] (https://en.wikipedia.org/wiki/Rome,_Georgia ), однакові в англійській мові (Рим і Рим), але різні в італійській ([Рома] (https://it.wikipedia.org/wiki/ Рома) та [Рим] (https://it.wikipedia.org / wiki / Rome_ (Грузія))). Тому завжди має бути можливість перекладати два назви міста на різні рядки. Більш загально кажучи: Переклади залежать від контексту. Ключ до даних визначає контекст, рядок однією мовою не дає достатнього контексту.
 
-A simple string to string dictionary does not suffice for DDF dataset translations. For example the short name of [Rome, Italy](https://en.wikipedia.org/wiki/Rome) and [Rome, Georgia, US](https://en.wikipedia.org/wiki/Rome,_Georgia), are the same in English (Rome and Rome), but different in Italian ([Roma](https://it.wikipedia.org/wiki/Roma) and [Rome](https://it.wikipedia.org/wiki/Rome_(Georgia))). Therefore it must always be possible to translate the two city names to different strings. In more general terms: Translations are context-dependent. The key to the data defines the context, the string in one language does not give enough context.
-
-For example: City key-value pairs in English
+Наприклад: Пари ключ-значення міста англійською мовою
 
 | _key_ | _value_ |
 | --- | --- |
@@ -779,7 +775,7 @@ For example: City key-value pairs in English
 | ita\_rme | Rome |
 | us\_geo\_rme | Rome |
 
-City key-value pairs in Italian
+Пари ключових значень міста італійською мовою
 
 | _key_ | _value_ |
 | --- | --- |
@@ -787,21 +783,19 @@ City key-value pairs in Italian
 | ita\_rme | Roma |
 | us\_geo\_rme | Rome |
 
-The specifics of how to model these languages are up to the specific DDF format definition, e.g. as in [DDFcsv](https://docs.google.com/document/d/1aynARjsrSgOKsO1dEqboTqANRD1O9u7J_xmxy8m5jW8/edit#heading=h.wwltud39groy).
+Специфіка моделювання цих мов залежить від конкретного визначення формату DDF, наприклад. як у [DDFcsv] (https://docs.google.com/document/d/1aynARjsrSgOKsO1dEqboTqANRD1O9u7J_xmxy8m5jW8/edit#heading=h.wwltud39groy).
 
-DDF Step 6: Synonyms
+DDF Крок 6: Синоніми
 
-A synonym is a string which can identify a concept or entity present in the dataset. The synonyms collection contains entity and concept ids with their synonyms.
+Синонім - це рядок, який може ідентифікувати поняття або сутність, присутні в наборі даних. Колекція синонімів містить ідентифікатори сутності та поняття з їх синонімами.
 
-_E.g.: The country entity_ _deu_ _has synonyms &quot;ger&quot;, &quot;de&quot; and &quot;Federal Republic of Germany&quot;._
+Синоніми використовуються для пошуку однакових понять та утворень в інших наборах даних для семантичної гармонізації (тобто переведення набору даних з одного простору імен в інший).
 
-Synonyms are used to find identical concepts and entities in other datasets for semantic harmonization (i.e. translating a dataset from one namespace to another).
+Синоніми відрізняються від перекладів (крок 5). Переклади призначені для споживання людиною, для представлення даних користувачам. Синоніми призначені для узгодження наборів даних. Тим не менш, ви можете використовувати переклади, щоб збільшити набір синонімів для гармонізації.
 
-Synonyms are different from translations (Step 5). Translations are for human consumption, for presenting the data to users. Synonyms are for harmonizing datasets. Nonetheless you could use translations to enlarge your set of synonyms for harmonization.
+Первинний ключ у цій колекції є складним: і поняття / сутність, і його синонім разом утворюють ключ. Поняття, що використовується для синонімів, ОБОВ'ЯЗКОВО бути синонімом. Поняття, що використовується для поняття / сутності, ОБОВ'ЯЗКОВО має бути поняттям для понять або домен чи сутність сутності (наприклад, географічна чи гендерна) для сутностей. Можуть бути додані додаткові властивості, наприклад джерело синоніма.
 
-The primary key in this collection is compound: both the concept/entity and its synonym together form the key. The concept used for the synonyms MUST be synonym. The concept used for the concept/entity MUST be concept for concepts or the entity domain or entity set (e.g. geo or gender) for entities. Additional properties can be added, such as the source of the synonym.
-
-Synonyms MUST be unique in the entity domain or concepts collection. E.g. &quot;Congo&quot; can only be used for one of the two countries &quot;Republic of the Congo&quot; and &quot;The Democratic Republic of the Congo&quot;. But &quot;Congo&quot; can be used as a synonym for both a country and a company if they are two different entity domains.
+Синоніми ОБОВ'ЯЗКОВО бути унікальними у сукупності доменних об'єктів чи понять. Наприклад Конго; може використовуватися лише для однієї з двох країн; Республіка Конго; і; Демократична Республіка Конго; Але Конго можна використовувати як синонім як країни, так і компанії, якщо вони є двома різними доменами.
 
 | _key_ | _value_ |
 | --- | --- |
@@ -825,9 +819,6 @@ Synonyms MUST be unique in the entity domain or concepts collection. E.g. &quot;
 | life\_expectancy | lex |
 | life\_expectancy | Life expectancy at birth |
 | ... | ... |
-
-#
-_A concepts-table enumerates all concepts in the dataset, including entity domains and entity sets. For now, we will only focus on the enumeration of entity domains and entity sets. More info about the concepts-table can found in step 3._
 
 ----------------------
 
