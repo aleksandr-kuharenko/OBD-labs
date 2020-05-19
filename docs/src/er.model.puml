@@ -1,0 +1,84 @@
+@startuml
+
+title
+<font size=18 color=black> Система управління даними
+<font size=16 color=black> ER-модель
+
+end title
+
+
+entity User #eeeeff {
+    id
+	name
+	email
+}
+
+entity Concept #eeeeff {
+    id
+	name
+	type
+	user_id
+}
+
+entity DataPoint #eeeeff {
+    id
+	user_id
+	indicator_id
+}
+
+entity DataPoint_has_Dimention #eeeeff {
+    id
+	dataPoint_id
+	dimention_id
+}
+
+entity Dimention #eeeeff {
+    id
+    key
+	concept_id
+	property_id
+}
+
+entity Property #eeeeff {
+    id
+    name
+	type
+	info
+	date
+}
+
+entity EntityProperty #eeeeff {
+    id
+    name
+	type
+	info
+	date
+}
+
+entity Indicator #eeeeff {
+    id
+    value
+	concept_id
+	property_id
+}
+
+entity Entity #eeeeff {
+    id
+    name
+	concept_id
+	property_id
+}
+
+
+Concept "0.*" --> "1.1" User
+DataPoint "0.*" --> "1.1" User
+DataPoint "1.1" --> "1.1" Indicator
+DataPoint_has_Dimention "0.*" --> "0.1" DataPoint
+DataPoint_has_Dimention "0.*" --> "0.1" Dimention
+Dimention "1.1" --> "0.1" Property
+Indicator "1.1" --> "0.1" Property
+Entity "0.*" --> "1.1" Concept
+Entity "1.1" --> "0.1" EntityProperty
+
+
+@enduml

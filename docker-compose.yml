@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+
+  db_pg:
+    image: postgres:alpine
+    container_name: pg_db
+    environment:
+      POSTGRES_DB: obd
+      POSTGRES_USER: obd_db_user
+      POSTGRES_PASSWORD: 123456789
+    volumes:
+      - './initdb.sh:/docker-entrypoint-initdb.d/initdb.sh'
+      - './.docker_pgdata:/var/lib/postgresql/data'
+    ports:
+      - '5432:5432'
