@@ -6,6 +6,8 @@ const { Property } = require('./Property');
 const { EntityProperty } = require('./EntityProperty');
 const { DataPoint } = require('./DataPoint');
 const { Entity } = require('./Entity');
+const { DataPointDimention } = require('./DataPointDimention');
+
 
 User.hasMany(DataPoint);
 User.hasMany(Concept);
@@ -30,4 +32,5 @@ module.exports = {
     Indicator, 
     Property, 
     EntityProperty,
+    DataPointDimention,
 } 
